@@ -6,3 +6,4 @@ Juego para dos jugadores
 Deteccion automatica de ganador o empate
 Tablero mostrado en consola
 Reinicio del juego sin salir del programa
+Valdez Ruelas Jesus Alejandro
