@@ -31,7 +31,7 @@ char checkWin(const vector<vector<char>>& b) {
     if (b[0][0] != ' ' && b[0][0] == b[1][1] && b[1][1] == b[2][2]) return b[0][0];
     if (b[0][2] != ' ' && b[0][2] == b[1][1] && b[1][1] == b[2][0]) return b[0][2];
 
-    // ¿Quedan casillas vacías?
+    // Â¿Quedan casillas vacÃ­as?
     for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)
             if (b[i][j] == ' ') return ' ';
@@ -40,14 +40,14 @@ char checkWin(const vector<vector<char>>& b) {
     return 'D';
 }
 
-// Pide y valida la jugada. Devuelve true si fue válida y colocó la marca.
+// Pide y valida la jugada. Devuelve true si fue vÃ¡lida y colocÃ³ la marca.
 bool makeMove(vector<vector<char>>& board, char player) {
     int row, col;
     cout << "Turno de " << player << ". Ingresa fila y columna (ej: 2 3): ";
     if (!(cin >> row >> col)) {
         cin.clear();
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        cout << "Entrada inválida. Por favor ingresa dos números entre 1 y 3.\n";
+        cout << "Entrada invÃ¡lida. Por favor ingresa dos nÃºmeros entre 1 y 3.\n";
         return false;
     }
     if (row < 1 || row > 3 || col < 1 || col > 3) {
@@ -63,33 +63,42 @@ bool makeMove(vector<vector<char>>& board, char player) {
 }
 
 int main() {
-    cout << "=== Tic Tac Toe ===\n";
-    bool playAgain = true;
-    while (playAgain) {
-        vector<vector<char>> board(3, vector<char>(3, ' '));
-        char current = 'X';
-        char result = ' ';
-        printBoard(board);
+    resetBoard();
+    currentPlayer = 'X';
+    bool gameOver = false;
 
-        while (true) {
-            while (!makeMove(board, current)) { }
-            printBoard(board);
-            result = checkWin(board);
-            if (result == 'X' || result == 'O') {
-                cout << "¡Jugador " << result << " gana!\n";
-                break;
-            } else if (result == 'D') {
-                cout << "Es un empate.\n";
-                break;
-            }
-            current = (current == 'X') ? 'O' : 'X';
+    while (!gameOver) {
+        printBoard();
+        int pos;
+
+        cout << "Jugador " << currentPlayer << ", elige una posiciÃ³n (1-9): ";
+        cin >> pos;
+
+        // âœ… ValidaciÃ³n de entrada
+        if (cin.fail() || pos < 1 || pos > 9 || board[pos - 1] == 'X' || board[pos - 1] == 'O') {
+            cin.clear();
+            cin.ignore(1000, '\n');
+            cout << "âŒ Movimiento no vÃ¡lido. Intenta de nuevo.\n";
+            continue;
         }
 
-        char resp;
-        cout << "¿Jugar otra vez? (s/n): ";
-        cin >> resp;
-        if (resp != 's' && resp != 'S') playAgain = false;
+        board[pos - 1] = currentPlayer;
+
+        if (checkWin()) {
+            printBoard();
+            cout << "ðŸŽ‰ Â¡Jugador " << currentPlayer << " ha ganado!\n";
+            gameOver = true;
+        } else if (checkDraw()) {
+            printBoard();
+            cout << "ðŸ¤ Â¡Es un empate!\n";
+            gameOver = true;
+        } else {
+            switchPlayer();
+        }
     }
-    cout << "Gracias por jugar. ¡Adiós!\n";
+
+    cout << "ðŸ‘‹ Â¡Gracias por jugar!\n";
     return 0;
 }
+
+
